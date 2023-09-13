@@ -18,6 +18,12 @@
     (display "No se puede realizar la accion debido a una duplicacion en los valores\n")
   ))
 
+;Selectores
+(define (get-flow-id some-flow) (car some-flow));Extrae el ID de un flow
+
+(define (get-flow-name some-flow)(cadr some-flow));Extrae nombre del flow
+
+(define (get-flow-options some-flow)(caddr some-flow));Extrae lista de opciones de un flow
 
 ;MODIFICADORES
 ;descripción: Función que añade opciones a un flujo
@@ -25,4 +31,9 @@
 ;dom: flow X option
 ;rec: flow
 (define (flow-add-option some-flow option)
-  (cons option some-flow))
+  (define (output some-flow option) (list (get-flow-id some-flow) (get-flow-name some-flow) (reverse (cons option (reverse (get-flow-options some-flow))))))
+  (if (null? (get-flow-options some-flow))
+      (output some-flow option)
+      (if (member (get-option-code option) (map get-option-code (get-flow-options some-flow)))
+          (display "No se puede realizar la acción debido a una duplicación en los valores\n")
+          (output some-flow option))))
