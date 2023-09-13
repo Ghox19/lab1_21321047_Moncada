@@ -1,5 +1,6 @@
 #lang racket
 
+(provide (all-defined-out))
 ;CONSTRUCTORES
 ;descripción: Función que crea opcion para flujo de un chatbot
 ;recursión: no
@@ -7,3 +8,7 @@
 ;rec: option
 (define (option code message ChatbotCodeLink FlowCodeLink . Keyword)
   (list code message ChatbotCodeLink FlowCodeLink Keyword))
+
+;SELECTORES
+
+(define (get-option-code some-option)(car some-option));Extrae el codigo de una opcion
