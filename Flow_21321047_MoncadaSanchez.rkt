@@ -15,7 +15,7 @@
       (else (elementos-repetidos (cdr lst)))))
   (if (elementos-repetidos (map get-option-code options))
     (list id name options)
-    (display "No se puede realizar la accion debido a una duplicacion en los valores\n")
+    (display "")
   ))
 
 ;Selectores
@@ -35,5 +35,5 @@
   (if (null? (get-flow-options some-flow))
       (output some-flow option)
       (if (member (get-option-code option) (map get-option-code (get-flow-options some-flow)))
-          (display "No se puede realizar la acción debido a una duplicación en los valores\n")
+          (display "")
           (output some-flow option))))
