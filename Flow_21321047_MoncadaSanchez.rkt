@@ -4,18 +4,19 @@
 (provide (all-defined-out))
 ;CONSTRUCTORES
 ;descripción: Función que crea un flujo de un chatbot
-;recursión: no
-;dom: name (String)  X Option*
+;recursión: si, para verificar si se repite algun code de un option
+;dom: id (int) X name (String)  X Option*
 ;rec: flow
-(define (flow id name . options)
-  (define (elementos-repetidos lst)
-    (cond
-      ((null? lst) #t)
-      ((member (car lst) (cdr lst)) #f) 
-      (else (elementos-repetidos (cdr lst)))))
-  (if (elementos-repetidos (map get-option-code options))
-    (list id name options)
-    (display "")
+(define (flow id name . option)
+  (define (eliminar-duplicados-option lst)
+  (cond ((null? lst) '()) 
+        ((member (get-option-code (car lst)) (map get-option-code (cdr lst)))
+         (eliminar-duplicados-option (cdr lst))) 
+        (else 
+         (cons (car lst) (eliminar-duplicados-option (cdr lst)))))) 
+  (if (null? option)
+    (list id name option)
+    (list id name (eliminar-duplicados-option option))
   ))
 
 ;Selectores
