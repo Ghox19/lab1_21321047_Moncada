@@ -8,16 +8,14 @@
 ;dom: id (int) X name (String)  X Option*
 ;rec: flow
 (define (flow id name . option)
-  (define (eliminar-duplicados-option lst)
-  (cond ((null? lst) '()) 
-        ((member (get-option-code (car lst)) (map get-option-code (cdr lst)))
-         (eliminar-duplicados-option (cdr lst))) 
-        (else 
-         (cons (car lst) (eliminar-duplicados-option (cdr lst)))))) 
-  (if (null? option)
-    (list id name option)
-    (list id name (eliminar-duplicados-option option))
-  ))
+  (define (eliminar-duplicados-option lista)
+    (cond ((null? lista) '()) ;Si la lista es vacia devuelve null
+          (else
+          (cons (car lista) ;Extrae el primer elemento de la lista y aplica un filtro a la lista
+                (eliminar-duplicados-option
+                  (filter (lambda (x) (not (equal? (get-option-code x) (get-option-code (car lista))))) 
+                  (cdr lista)))))));Asi elimina todos los elementos repetidos a travez del filtro y trabaja con la lista restante
+  (list id name (eliminar-duplicados-option option)))
 
 ;Selectores
 (define (get-flow-id some-flow) (car some-flow));Extrae el ID de un flow

@@ -41,5 +41,5 @@
   (if (null? (get-chatbot-flows some-chatbot))
       (output some-chatbot flow)
       (if (member (get-flow-id flow) (map get-flow-id (get-chatbot-flows some-chatbot)))
-          (display "")
+          some-chatbot
           (output some-chatbot flow))))
