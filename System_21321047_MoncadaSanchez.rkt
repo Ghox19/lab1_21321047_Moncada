@@ -19,3 +19,37 @@
     (list (current-seconds) (list name null null initialchatbotcodelink chatbot))
     (list (current-seconds) (list name null null initialchatbotcodelink 
     (eliminar-duplicados-chatbot chatbot)))))
+
+;SELECTORES
+(define (get-system-date some-system) (car some-system));Extrae la fecha de creacion de un sistema
+
+(define (get-system-name some-system) (caadr some-system));Extrae el nombre del sistema
+
+(define (get-system-user some-system) (cadadr some-system))
+
+(define (get-system-chatHistory some-system) (cadr (cdadr some-system)))
+
+(define (get-system-initialchatbotcodelink some-system) (caddr (cdadr some-system)));Extrae el primer chatbot del sistema
+
+(define (get-system-chatbots some-system) (cadddr (cdadr some-system)));Extrae la lista de chatbots del sistema
+
+(define (get-system-initial-chatbot some-system) 
+  (car (filter (lambda (chatbot) (equal? (get-chatbot-id chatbot) (get-system-initialchatbotcodelink some-system)))
+  (get-system-chatbots some-system))))
+
+;MODIFICADORES
+;descripción: Función añade chatbots al sistema
+;recursión: no
+;dom: system X chatbot
+;rec: system
+(define (system-add-chatbot some-system chatbot)
+  (define (output-chatbot some-system chatbot) 
+    (list (get-system-date some-system) 
+      (list (get-system-name some-system) 
+      (get-system-user some-system) 
+      (get-system-chatHistory some-system) 
+      (get-system-initialchatbotcodelink some-system)
+      (reverse (cons chatbot (reverse (get-system-chatbots some-system)))))))
+    (if (member (get-chatbot-id chatbot) (map get-chatbot-id (get-system-chatbots some-system)))
+        some-system
+        (output-chatbot some-system chatbot)))
