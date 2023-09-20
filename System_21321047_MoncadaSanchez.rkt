@@ -53,3 +53,21 @@
     (if (member (get-chatbot-id chatbot) (map get-chatbot-id (get-system-chatbots some-system)))
         some-system
         (output-chatbot some-system chatbot)))
+
+;descripción: Función añade un usuario al sistema
+;recursión: no
+;dom: system X user
+;rec: system
+(define (system-add-user some-system user)
+  (define (output-user some-system user) 
+    (list (get-system-date some-system) 
+      (list (get-system-name some-system) 
+      (reverse (cons user (reverse (get-system-user some-system)))) 
+      (get-system-chatHistory some-system) 
+      (get-system-initialchatbotcodelink some-system)
+      (get-system-chatbots some-system))))
+  (if (null? (get-system-user some-system))
+    (output-user some-system (make-user user))
+    (if (member user (map get-user-name (get-system-user some-system)))
+      some-system
+      (output-user some-system (make-user user)))))
