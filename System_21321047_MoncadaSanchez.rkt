@@ -1,6 +1,11 @@
 #lang racket
+(require "Common_21321047_MoncadaSanchez.rkt")
 (require "Chatbot_21321047_MoncadaSanchez.rkt")
+(require "Flow_21321047_MoncadaSanchez.rkt")
+(require "Option_21321047_MoncadaSanchez.rkt")
 (require "User_21321047_MoncadaSanchez.rkt")
+(require "Chat_History_21321047_MoncadaSanchez.rkt")
+(require "Date_21321047_MoncadaSanchez.rkt")
 
 (provide (all-defined-out))
 ;CONSTRUCTORES
@@ -9,16 +14,11 @@
 ;dom: name (string) X InitialChatbotCodeLink (Int) X chatbot*
 ;rec: system
 (define (system name initialchatbotcodelink . chatbot)
-  (define (eliminar-duplicados-chatbot lista)
-    (cond ((null? lista) '()) ;Si la lista es vacia devuelve null
-          (else
-          (cons (car lista) (eliminar-duplicados-chatbot
-            (filter (lambda (x) (not (equal? (get-chatbot-id x) (get-chatbot-id (car lista))))) 
-            (cdr lista)))))))
   (if (null? chatbot)
-    (list (current-seconds) (list name null null initialchatbotcodelink chatbot))
-    (list (current-seconds) (list name null null initialchatbotcodelink 
-    (eliminar-duplicados-chatbot chatbot)))))
+    (list (make-date) (list name null null initialchatbotcodelink chatbot))
+    (list (make-date) (list name null null initialchatbotcodelink initialchatbotcodelink 
+    (get-chatbot-Initialflow (car (filter (lambda (chatbot) (equal? (get-chatbot-id chatbot) 
+    initialchatbotcodelink)) chatbot))) (eliminar-duplicados chatbot get-chatbot-id)))))
 
 ;SELECTORES
 (define (get-system-date some-system) (car some-system));Extrae la fecha de creacion de un sistema
@@ -31,11 +31,18 @@
 
 (define (get-system-initialchatbotcodelink some-system) (caddr (cdadr some-system)));Extrae el primer chatbot del sistema
 
-(define (get-system-chatbots some-system) (cadddr (cdadr some-system)));Extrae la lista de chatbots del sistema
+(define (get-system-Activechatbotcodelink some-system) (cadddr (cdadr some-system)))
 
-(define (get-system-initial-chatbot some-system) 
-  (car (filter (lambda (chatbot) (equal? (get-chatbot-id chatbot) (get-system-initialchatbotcodelink some-system)))
-  (get-system-chatbots some-system))))
+(define (get-system-Activeflowcodelink some-system) (car (cddddr (cdadr some-system))))
+
+(define (get-system-chatbots some-system) (cadr (cddddr (cdadr some-system))));Extrae la lista de chatbots del sistema
+
+(define (get-system-active-chatbot some-system) 
+  (if(null? (filter (lambda (chatbot) (equal? (get-chatbot-id chatbot) (get-system-Activechatbotcodelink some-system)))
+  (get-system-chatbots some-system)))
+    -1
+    (car (filter (lambda (chatbot) (equal? (get-chatbot-id chatbot) (get-system-Activechatbotcodelink some-system)))
+    (get-system-chatbots some-system)))))
 
 ;MODIFICADORES
 ;descripción: Función añade chatbots al sistema
@@ -49,6 +56,8 @@
       (get-system-user some-system) 
       (get-system-chatHistory some-system) 
       (get-system-initialchatbotcodelink some-system)
+      (get-system-Activechatbotcodelink some-system)
+      (get-system-Activeflowcodelink some-system)
       (reverse (cons chatbot (reverse (get-system-chatbots some-system)))))))
     (if (member (get-chatbot-id chatbot) (map get-chatbot-id (get-system-chatbots some-system)))
         some-system
@@ -65,9 +74,31 @@
       (reverse (cons user (reverse (get-system-user some-system)))) 
       (get-system-chatHistory some-system) 
       (get-system-initialchatbotcodelink some-system)
+      (get-system-Activechatbotcodelink some-system)
+      (get-system-Activeflowcodelink some-system)
       (get-system-chatbots some-system))))
   (if (null? (get-system-user some-system))
     (output-user some-system (make-user user))
     (if (member user (map get-user-name (get-system-user some-system)))
       some-system
       (output-user some-system (make-user user)))))
+
+;OTRAS FUNCIONES
+
+;descripción: Función que permite iniciar una sesión en el sistema.
+;recursión: no
+;dom: system X user
+;rec: system
+(define (system-login some-system user)
+  (define (output-login some-system user) 
+    (list (get-system-date some-system) 
+      (list (get-system-name some-system) 
+      (get-login-user-list (get-system-user some-system) user) 
+      (get-system-chatHistory some-system) 
+      (get-system-initialchatbotcodelink some-system)
+      (get-system-Activechatbotcodelink some-system)
+      (get-system-Activeflowcodelink some-system)
+      (get-system-chatbots some-system))))
+  (if (is-login-user (get-system-user some-system))
+    some-system
+    (output-login some-system user)))
