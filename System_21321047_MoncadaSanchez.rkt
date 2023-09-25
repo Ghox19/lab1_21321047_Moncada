@@ -102,3 +102,22 @@
   (if (is-login-user (get-system-user some-system))
     some-system
     (output-login some-system user)))
+
+;descripción: Función que permite iniciar una sesión en el sistema.
+;recursión: no
+;dom: system X user
+;rec: system
+(define (system-logout some-system)
+  (define (output-logout some-system) 
+    (list (get-system-date some-system) 
+      (list (get-system-name some-system) 
+      (get-logout-user-list (get-system-user some-system)) 
+      (get-system-chatHistory some-system) 
+      (get-system-initialchatbotcodelink some-system)
+      (get-system-initialchatbotcodelink some-system)
+      (get-chatbot-Initialflow (car (filter (lambda (chatbot) (equal? (get-chatbot-id chatbot) 
+        (get-system-initialchatbotcodelink some-system))) (get-system-chatbots some-system))))
+      (get-system-chatbots some-system))))
+  (if (is-login-user (get-system-user some-system))
+    (output-logout some-system)
+    some-system))
