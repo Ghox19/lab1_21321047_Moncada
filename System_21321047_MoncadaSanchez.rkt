@@ -121,3 +121,28 @@
   (if (is-login-user (get-system-user some-system))
     (output-logout some-system)
     some-system))
+
+
+;descripción:  Función que permite interactuar con un chatbot.
+;recursión: si, Recursion Natural en la busqueda de la opcion desde el flow
+;dom: system X message (string)
+;rec: system
+(define (system-talk-rec some-system message)
+  (define (output-talk some-system option message) 
+    (list (get-system-date some-system) 
+      (list (get-system-name some-system) 
+      (get-system-user some-system) 
+      (insertar-final-lista (make-message (get-user-name (get-login-user (get-system-user some-system))) 
+        (get-chatbot-name (get-system-active-chatbot some-system)) message (get-option-message option))
+        (get-system-chatHistory some-system))))
+      (get-system-initialchatbotcodelink some-system)
+      (get-option-ChatbotCodeLink option)
+      (get-option-InitialFlowCodeLink option)
+      (get-system-chatbots some-system))
+  (if (not (is-login-user (get-system-user some-system)))
+  some-system
+    (if (equal? -1 (get-flow-option-from-message-rec (get-chatbot-active-flow 
+    (get-system-active-chatbot some-system)(get-system-Activeflowcodelink some-system)) message))
+      some-system
+      (output-talk some-system (get-flow-option-from-message-rec (get-chatbot-active-flow 
+      (get-system-active-chatbot some-system)(get-system-Activeflowcodelink some-system)) message) message))))

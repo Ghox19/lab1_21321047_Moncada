@@ -7,3 +7,6 @@
         (cons (car lista) (eliminar-duplicados
             (filter (lambda (x) (not (equal? (function-get x) (function-get (car lista)))))
             (cdr lista)) function-get))))
+
+(define (insertar-final-lista elemento lista)
+  (reverse (cons elemento (reverse lista))))
