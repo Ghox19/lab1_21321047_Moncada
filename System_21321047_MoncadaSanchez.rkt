@@ -101,6 +101,16 @@
       activeflowcode
       (get-system-chatbots some-system))))
 
+(define (set-system-notalk some-system chatHistory) 
+    (list (get-system-date some-system) 
+      (list (get-system-name some-system) 
+      (get-system-user some-system) 
+      chatHistory
+      (get-system-initialchatbotcodelink some-system)
+      (get-system-Activechatbotcodelink some-system)
+      (get-system-Activeflowcodelink some-system)
+      (get-system-chatbots some-system))))
+
 ;descripción: Función añade chatbots al sistema
 ;recursión: no
 ;dom: system X chatbot
@@ -152,21 +162,36 @@
         (get-system-user some-system))) (get-chatbot-id (get-system-active-chatbot some-system)) 
         (get-system-Activeflowcodelink some-system) message) (get-system-chatHistory some-system)))
 
-(define (get-option-from-message-rec some-system message) 
+(define (get-system-option-from-message-rec some-system message) 
       (get-flow-option-from-message-rec (get-chatbot-active-flow 
       (get-system-active-chatbot some-system)(get-system-Activeflowcodelink some-system)) message))
 
-(define (get-option-from-message some-system message) 
+(define (get-system-option-from-message some-system message) 
       (get-flow-option-from-message (get-chatbot-active-flow 
       (get-system-active-chatbot some-system)(get-system-Activeflowcodelink some-system)) message))
 
 (define (system-talk-rec some-system message)
   (if (not (is-login-user (get-system-user some-system)))
-  some-system
+  (set-system-notalk some-system (insertar-mensaje-chatHistory some-system message))
     (if (equal? -1 (get-flow-option-from-message-rec (get-chatbot-active-flow 
     (get-system-active-chatbot some-system)(get-system-Activeflowcodelink some-system)) message))
-      some-system
+      (set-system-notalk some-system (insertar-mensaje-chatHistory some-system message))
       (set-system-talk some-system 
-        (get-option-ChatbotCodeLink (get-option-from-message-rec some-system message))
-        (get-option-InitialFlowCodeLink (get-option-from-message-rec some-system message))
+        (get-option-ChatbotCodeLink (get-system-option-from-message-rec some-system message))
+        (get-option-InitialFlowCodeLink (get-system-option-from-message-rec some-system message))
+        (insertar-mensaje-chatHistory some-system message)))))
+
+;descripción:  Función que permite interactuar con un chatbot.
+;recursión: no
+;dom: system X message (string)
+;rec: system
+(define (system-talk some-system message)
+  (if (not (is-login-user (get-system-user some-system)))
+  (set-system-notalk some-system (insertar-mensaje-chatHistory some-system message))
+    (if (equal? -1 (get-flow-option-from-message (get-chatbot-active-flow 
+      (get-system-active-chatbot some-system)(get-system-Activeflowcodelink some-system)) message))
+      (set-system-notalk some-system (insertar-mensaje-chatHistory some-system message))
+      (set-system-talk some-system 
+        (get-option-ChatbotCodeLink (get-system-option-from-message some-system message))
+        (get-option-InitialFlowCodeLink (get-system-option-from-message some-system message))
         (insertar-mensaje-chatHistory some-system message)))))
