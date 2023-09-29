@@ -195,3 +195,14 @@
         (get-option-ChatbotCodeLink (get-system-option-from-message some-system message))
         (get-option-InitialFlowCodeLink (get-system-option-from-message some-system message))
         (insertar-mensaje-chatHistory some-system message)))))
+
+(define (get-message-display-format some-message some-system)
+  (string-append 
+    (get-message-date some-message) " - " (get-message-user some-message) ": "
+    (get-message-user-message some-message) "\n"
+    (get-message-date some-message) " - "
+    (get-chatbot-name (get-system-chatbot-from-id some-system (get-message-chatbot some-message))) ": "
+    (get-flow-name (get-chatbot-active-flow (get-system-chatbot-from-id some-system 
+    (get-message-chatbot some-message)) (get-message-flow some-message))) "\n"
+    (get-flow-options-format (get-chatbot-active-flow (get-system-chatbot-from-id some-system 
+    (get-message-chatbot some-message)) (get-message-flow some-message)))))
