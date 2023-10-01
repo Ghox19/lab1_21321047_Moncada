@@ -62,3 +62,6 @@
     (if (string->number message)
       (get-option-from-message (get-flow-option some-flow) (string->number message) get-option-code equal?)
       (get-option-from-message (get-flow-option some-flow) message get-option-keyword member))))
+
+(define (get-flow-options-format some-flow) 
+  (string-join (map get-option-message (get-flow-option some-flow)) "\n"))
