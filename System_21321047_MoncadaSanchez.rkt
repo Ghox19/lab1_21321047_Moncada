@@ -206,3 +206,14 @@
     (get-message-chatbot some-message)) (get-message-flow some-message))) "\n"
     (get-flow-options-format (get-chatbot-active-flow (get-system-chatbot-from-id some-system 
     (get-message-chatbot some-message)) (get-message-flow some-message)))))
+
+;descripción:  Función que permite obtener sintesis de lo realizado por un usuario
+;recursión: noot
+;dom: system X message (string)
+;rec: system
+(define (system-synthesis some-system some-user)
+  (if (null? (get-system-chatHistory some-system))
+    (display "")
+    (string-join (map (lambda (message) (get-message-display-format message some-system)) 
+    (filter (lambda (chatHistory-message) (equal? (get-message-user chatHistory-message) some-user)) 
+    (get-system-chatHistory some-system))) "\n\n")))
