@@ -217,3 +217,19 @@
     (string-join (map (lambda (message) (get-message-display-format message some-system)) 
     (filter (lambda (chatHistory-message) (equal? (get-message-user chatHistory-message) some-user)) 
     (get-system-chatHistory some-system))) "\n\n")))
+
+;descripción:  Función que permite obtener sintesis de lo realizado por un usuario
+;recursión: no
+;dom: system X message (string)
+;rec: system
+(define (system-simulate some-system n-interaccions seed)
+  (define (system-simulate-rec some-system n-interaccions seed)
+    (cond 
+      ((zero? n-interaccions) some-system)
+      ((zero? seed) some-system)
+      ((equal? -1 (get-system-Activechatbotcodelink some-system)) some-system)
+      (else (system-simulate-rec (system-talk some-system (number->string (remainder seed 10))) 
+        (- n-interaccions 1) (myRandom seed)))))
+  (system-simulate-rec (system-login (system-add-user 
+    (system-logout some-system) (string-append "user" (number->string seed)))
+    (string-append "user" (number->string seed))) n-interaccions seed))
