@@ -8,6 +8,8 @@
 
 (define (get-user-state some-user) (cadr some-user))
 
+(define (get-user-name-by-seed some-seed) (string-append "user" (number->string some-seed)))
+
 (define (get-login-user user-list)
   (car (filter (lambda (some-user) (equal? (get-user-state some-user) #t)) user-list)))
 
@@ -26,3 +28,4 @@
     (else (cons (car lst) (get-logout-user-list (cdr lst))))))
 
 (define (is-login-user user-lst) (member #t (map get-user-state user-lst)))
+
