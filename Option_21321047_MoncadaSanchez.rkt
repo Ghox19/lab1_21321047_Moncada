@@ -1,14 +1,6 @@
 #lang racket
 
 (provide (all-defined-out))
-;CONSTRUCTORES
-;descripción: Función que crea opcion para flujo de un chatbot
-;recursión: no
-;dom: code (Int)  X message (String)  X ChatbotCodeLink (Int) X InitialFlowCodeLink (Int) X Keyword*
-;rec: option
-(define (option code message ChatbotCodeLink FlowCodeLink . Keyword)
-  (list code message ChatbotCodeLink FlowCodeLink Keyword))
-
 ;SELECTORES
 ;descripción: Función que selecciona un code de una opcion
 ;recursión: no
@@ -41,7 +33,7 @@
 (define (get-option-keyword some-option)(car (cddddr some-option)))
 
 ;descripción: Función que selecciona una opcion base a un mensaje
-;recursión: Recursion Natural
+;recursión: Recursion Natural, debido a que se solicita para ciertas funciones
 ;dom: option-list(list) x message(string) x function-get(operation) x condition(Boolean Function)
 ;rec: option
 (define (get-option-from-message-rec option-list message function-get condition)

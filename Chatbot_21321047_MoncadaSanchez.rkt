@@ -1,16 +1,7 @@
 #lang racket
 (require "Flow_21321047_MoncadaSanchez.rkt")
-(require "Common_21321047_MoncadaSanchez.rkt")
 
 (provide (all-defined-out))
-;CONSTRUCTORES
-;descripción: Función constructora de un chatbot
-;recursión: Recursion Natural en la funcion "eliminar-duplicados"
-;dom: chatbotID (int) X name (String) X welcomeMessage (String) X startFlowId(int) X  flows* 
-;rec: chatbot
-(define (chatbot id name welcomeMessage startFlowId . flows)
-  (list id name welcomeMessage startFlowId (eliminar-duplicados flows get-flow-id)))
-  
 ;SELECTORES
 ;descripción: Función que selecciona un id de un chatbot
 ;recursión: no
@@ -66,14 +57,3 @@
     (get-chatbot-welcomeMessage some-chatbot) 
     (get-chatbot-Initialflow some-chatbot)
     flow-list))
-
-;descripción: Función añadir flujos a un chatbot
-;recursión: Recursion Natural en la funcion "rec-list-add"
-;dom: chatbot X flow
-;rec: chatbot
-(define (chatbot-add-flow some-chatbot flow)
-  (if (null? (get-chatbot-flows some-chatbot))
-      (set-chatbot-new-flow some-chatbot (rec-list-add (get-chatbot-flows some-chatbot) flow))
-      (if (member (get-flow-id flow) (map get-flow-id (get-chatbot-flows some-chatbot)))
-          some-chatbot
-          (set-chatbot-new-flow some-chatbot (rec-list-add (get-chatbot-flows some-chatbot) flow)))))
